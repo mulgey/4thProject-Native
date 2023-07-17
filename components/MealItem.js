@@ -6,9 +6,13 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
+import MealDetails from "./MealDetails";
 
 export default function MealItem({
+  // Stack.Screen dosyası olmadığı için MealsOverviewScreen dosyası üzerinden gönderdiğimiz navigation'ı burada kabul ediyoruz
+  navigation,
   title,
+  id,
   imageURL,
   duration,
   complexity,
@@ -19,17 +23,25 @@ export default function MealItem({
       <Pressable
         android_ripple={{ color: "#ccc" }}
         style={({ pressed }) => (pressed ? styles.iOSPressed : null)}
+        onPress={() => {
+          // object içerisindeki navigate fonksiyonu ile "name" olarak belirttiğimiz isme (sayfaya) yönlendirdik (1st parameter)
+          // ikinci parametrede aktarmak istediğimiz verileri nesne olarak olarak sunduk
+          navigation.navigate("mealDetail", {
+            mealID: id,
+          });
+        }}
       >
         <View style={styles.innerContainer}>
           <View>
+            {/* variable lar için kullanılan "uri"yi ilk defa kullandık */}
             <Image style={styles.image} source={{ uri: imageURL }} />
             <Text style={styles.title}>{title}</Text>
           </View>
-          <View style={styles.details}>
-            <Text style={styles.detailItem}>{duration}</Text>
-            <Text style={styles.detailItem}>{complexity.toUpperCase()}</Text>
-            <Text style={styles.detailItem}>{affordability.toUpperCase()}</Text>
-          </View>
+          <MealDetails
+            duration={duration}
+            complexity={complexity}
+            affordability={affordability}
+          />
         </View>
       </Pressable>
     </View>
@@ -65,16 +77,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     margin: 8,
-  },
-  details: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 8,
-  },
-  detailItem: {
-    marginHorizontal: 4,
-    fontSize: 12,
   },
   iOSPressed: {
     opacity: 0.5,

@@ -7,7 +7,7 @@ import { CATEGORIES } from "../data/dummy-data";
 import CategoryGridTile from "../components/CategoryGridTile";
 
 // react navigation'a ait olan navigation object'ini kullandık
-export default function CategoriesScreens({ navigation }) {
+export default function CategoriesScreen({ navigation }) {
   return (
     <FlatList
       data={CATEGORIES}
@@ -21,7 +21,7 @@ export default function CategoriesScreens({ navigation }) {
             onPress={() => {
               // object içerisindeki navigate fonksiyonu ile "name" olarak belirttiğimiz isme (sayfaya) yönlendirdik (1st parameter)
               // ikinci parametrede aktarmak istediğimiz verileri nesne olarak olarak sunduk
-              navigation.navigate("Meal Overview", {
+              navigation.navigate("mealOverview", {
                 kategoriID: herbirÖge.item.id,
               });
             }}
