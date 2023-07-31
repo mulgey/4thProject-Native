@@ -1,23 +1,19 @@
-import { useLayoutEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Button,
-} from "react-native";
+import { useContext, useLayoutEffect } from "react";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 
 import { MEALS } from "../data/dummy-data";
 
-// components
+// components & contexts
 import MealDetails from "../components/MealDetails";
 import SubTitle from "../components/MealDetail/SubTitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
+import { FavoritesContext } from "../store/context/favorites-context";
 
 // Stack.Screen grubunda olduğu için "route"u direkt olarak kullanabildik
 export default function MealDetailScreen({ route, navigation }) {
+  const favsContext = useContext(FavoritesContext);
+
   // MealItem dosyası içerisinde navigate object'i içerisinde gönderdiğimiz data nesnesinden title'ı çektik
   const mealID = route.params.mealID;
 
@@ -25,8 +21,16 @@ export default function MealDetailScreen({ route, navigation }) {
   // böylece tüm verileri tek tek MealItem dosyası üzerinden aktarmaya gerek kalmadı
   const secilmisMeal = MEALS.find((yemek) => yemek.id === mealID);
 
-  function headerButtonFonksiyonu() {
-    console.log("Pressed!");
+  // öncelikle önceden eklenmiş bir öğe mi onu kontrol edelim
+  const buMealFavoriMi = favsContext.ids.includes(mealID);
+
+  function starDegisimFonksiyonu() {
+    // favori olup olmamasına göre farklı aksiyonlar
+    if (buMealFavoriMi) {
+      favsContext.removeFavorite(mealID);
+    } else {
+      favsContext.addFavorite(mealID);
+    }
   }
 
   // useLayoutEffect sayesinde sırayla gerçekleştirip komponent yüklenmesinde hata oluşmasını engelledik
@@ -37,14 +41,15 @@ export default function MealDetailScreen({ route, navigation }) {
       headerRight: () => {
         return (
           <IconButton
-            onPress={headerButtonFonksiyonu}
-            icon={"star"}
+            onPress={starDegisimFonksiyonu}
+            // yıldız, favori olup olmamasına göre dinamik değişkenlik gösterecektir
+            icon={buMealFavoriMi ? "star" : "star-outline"}
             iconColor={"white"}
           />
         );
       },
     });
-  }, [secilmisMeal, navigation, headerButtonFonksiyonu]);
+  }, [secilmisMeal, navigation, starDegisimFonksiyonu]);
 
   return (
     <ScrollView>

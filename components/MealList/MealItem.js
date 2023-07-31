@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import MealDetails from "./MealDetails";
+import MealDetails from "../MealDetails";
 
 export default function MealItem({
   // Stack.Screen dosyası olmadığı için MealsOverviewScreen dosyası üzerinden gönderdiğimiz navigation'ı burada kabul ediyoruz
